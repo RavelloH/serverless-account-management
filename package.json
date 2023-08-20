@@ -1,0 +1,23 @@
+{
+  "name": "serverless-account-management",
+  "version": "1.0.0",
+  "description": "Severless式账号管理系统，使用Postgres数据库，实现登录/注册/修改密码/获取信息/更改信息等功能",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RavelloH/serverless-account-management.git"
+  },
+  "author": "RavelloH",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/RavelloH/serverless-account-management/issues"
+  },
+  "homepage": "https://github.com/RavelloH/serverless-account-management#readme",
+  "dependencies": {
+    "@prisma/client": "^5.1.1",
+    "@vercel/postgres": "^0.4.1"
+  }
+}

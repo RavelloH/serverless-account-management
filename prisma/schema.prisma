@@ -1,0 +1,82 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
+}
+
+model User {
+  uid           Int          @id @default(autoincrement())
+  email         String       @unique
+  emailVerified Boolean      @default(false)
+  username      String       @unique @db.VarChar(10)
+  nickname      String       @db.VarChar(50)
+  bio           String?      @db.VarChar(255)
+  birth         DateTime?    @db.Date
+  country       String?      @db.VarChar(10)
+  role          Role         @default(USER)
+  updatedAt     DateTime     @updatedAt
+  createAt      DateTime     @default(now())
+  message       Message[]
+  post          Post[]
+  article       Article[]
+  following     FriendShip[] @relation("Following")
+  followed      FriendShip[] @relation("Followed")
+  gender        Gender?      @default(UNSET)
+}
+
+model Message {
+  id          String   @id @default(uuid())
+  context     String   @db.VarChar(511)
+  createAt    DateTime @default(now())
+  from        User     @relation(fields: [fromUserUid], references: [uid])
+  fromUserUid Int
+  toUserUid   Int
+}
+
+model Post {
+  id          String   @id @default(uuid())
+  context     String   @db.VarChar(5000)
+  createAt    DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  user        User     @relation(fields: [userUid], references: [uid])
+  userUid     Int
+  likeUserUid Int[]
+}
+
+model Article {
+  id        String   @id @default(uuid())
+  User      User     @relation(fields: [userUid], references: [uid])
+  userUid   Int
+  createAt  DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  context   String   @db.VarChar(50000)
+  title     String   @db.VarChar(50)
+}
+
+model FriendShip {
+  id               String   @id @default(uuid())
+  followingUser    User     @relation("Following", fields: [followingUserUid], references: [uid])
+  followedUser     User     @relation("Followed", fields: [followedUserUid], references: [uid])
+  followingUserUid Int
+  followedUserUid  Int
+  startAt          DateTime @default(now())
+}
+
+enum Role {
+  USER
+  MANAGER
+  ADMIN
+}
+
+enum Gender {
+  MALE
+  FAMALE
+  INTERSEX
+  UNSET
+}
