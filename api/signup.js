@@ -17,11 +17,6 @@ async function signup(username, nickname, email, password) {
             password: encryptPassword
         },
     })
-
-    const allUsers = await prisma.user.findMany()
-    console.dir(allUsers, {
-        depth: null
-    })
     return newResponse(200,undefined,'注册成功')
 }
 function encrypt(password) {
