@@ -40,16 +40,16 @@ module.exports = (req, res) => {
     console.log('[infoJSON]', infoJSON)
     signup(infoJSON.username, infoJSON.nickname, infoJSON.email, infoJSON.password)
     .then(async () => {
-        res.writeHead(200, {
-            "Content-Type": "application/json"
-        });
-        res.write(newResponse(200, undefined, '注册成功'));
-        res.end();
+        res.json(
+            newResponse(200, undefined, '注册成功')
+        )
         await prisma.$disconnect()
     })
     .catch(async (e) => {
         console.error(e)
+        res.json(
+            newResponse(400, undefined, '错误：'+e)
+        )
         await prisma.$disconnect()
-        process.exit(1)
     })
 }
