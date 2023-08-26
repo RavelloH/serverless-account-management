@@ -28,7 +28,7 @@ function encrypt(password) {
     const pwd = shuffler(password);
     console.log('[shuffler]', pwd)
     const options = {
-        timeCost: 4,
+        timeCost: 3,
         memoryCost: 65536,
         parallelism: 8,
         hashLength: 32
