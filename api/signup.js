@@ -23,7 +23,7 @@ async function signup(username, nickname, email, password) {
         depth: null
     })
 }
-async function encrypt(password) {
+function encrypt(password) {
     const pwd = shuffler(password);
     console.log('[shuffler]', pwd)
     const options = {
@@ -33,12 +33,10 @@ async function encrypt(password) {
         // hashLength: 32,
     };
     try {
-        const hashedPassword = await argon2.hash(shuffler(password));
+        const hashedPassword = argon2.hash(shuffler(password));
     } catch (err) {
         console.log('error:',err)
     }
-    console.log(hashedPassword)
-    return hashedPassword
 }
 
 module.exports = (req, res) => {
