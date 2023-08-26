@@ -1,9 +1,7 @@
 const {
     PrismaClient
 } = require('@prisma/client')
-const {
-    argon2
-} = require("argon2");
+const argon2 = require('argon2');
 const newResponse = require('../utils/response')
 const shuffler = require('../utils/shuffler')
 const prisma = new PrismaClient()
