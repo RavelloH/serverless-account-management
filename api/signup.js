@@ -35,7 +35,7 @@ async function encrypt(password) {
         // hashLength: 32,
     };
     try {
-        const hashedPassword = await argon2.hash(shuffler(password););
+        const hashedPassword = await argon2.hash(shuffler(password));
     } catch (err) {
         console.log('error:',err)
     }
