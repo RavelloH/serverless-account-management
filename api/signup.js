@@ -7,7 +7,7 @@ const shuffler = require('../utils/shuffler')
 const prisma = new PrismaClient()
 
 async function signup(username, nickname, email, password) {
-    await let encryptPassword = encrypt(password)
+    let encryptPassword = await encrypt(password)
     console.log('pwd', encryptPassword)
     await prisma.user.create({
         data: {
