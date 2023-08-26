@@ -25,11 +25,12 @@ async function signup(username, nickname, email, password) {
 }
 async function encrypt(password) {
   const pwd = shuffler(password);
+  console.log('[shuffler]',pwd)
   const options = {
     timeCost: 4,
-    memoryCost: 65536,
-    parallelism: 4,
-    hashLength: 32,
+    memoryCost: 655360,
+    parallelism: 1,
+    // hashLength: 32,
   };
   const hashedPassword = await argon2.hash(pwd,options);
   return hashedPassword
