@@ -17,7 +17,6 @@ async function signup(username, nickname, email, password) {
             password: encryptPassword
         },
     })
-    return newResponse(200,undefined,'注册成功')
 }
 function encrypt(password) {
     const pwd = shuffler(password);
@@ -41,6 +40,11 @@ module.exports = (req, res) => {
     console.log('[infoJSON]', infoJSON)
     signup(infoJSON.username, infoJSON.nickname, infoJSON.email, infoJSON.password)
     .then(async () => {
+        res.writeHead(200, {
+            "Content-Type": "application/json"
+        });
+        res.write(newResponse(200, undefined, '注册成功'));
+        res.end();
         await prisma.$disconnect()
     })
     .catch(async (e) => {
