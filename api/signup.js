@@ -8,6 +8,7 @@ const prisma = new PrismaClient()
 
 async function signup(username, nickname, email, password) {
     let encryptPassword = encrypt(password)
+    console.log('pwd',encryptPassword)
     await prisma.user.create({
         data: {
             username: username,
@@ -38,7 +39,9 @@ module.exports = (req, res) => {
     const {
         info
     } = req.query;
+    console.log('[info]',info)
     let infoJSON = JSON.parse(info)
+    console.log('[infoJSON]',infoJSON)
     signup(infoJSON.username,infoJSON.nickname,infoJSON.email,infoJSON.password)
     .then(async () => {
         await prisma.$disconnect()
