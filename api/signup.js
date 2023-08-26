@@ -22,21 +22,19 @@ async function signup(username, nickname, email, password) {
     console.dir(allUsers, {
         depth: null
     })
+    return newResponse(200,undefined,'注册成功')
 }
 function encrypt(password) {
     const pwd = shuffler(password);
     console.log('[shuffler]', pwd)
     const options = {
         timeCost: 4,
-        memoryCost: 655360,
-        parallelism: 1,
-        // hashLength: 32,
-    };
-    try {
-        const hashedPassword = argon2.hash(shuffler(password));
-    } catch (err) {
-        console.log('error:',err)
+        memoryCost: 65536,
+        parallelism: 8,
+        hashLength: 32
     }
+    const hashedPassword = argon2.hash(shuffler(password), options);
+    return hashedPassword
 }
 
 module.exports = (req, res) => {
