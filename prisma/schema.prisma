@@ -1,13 +1,10 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  provider = "postgresql"
+  url      = env("POSTGRES_PRISMA_URL")
 }
 
 model User {
@@ -22,21 +19,23 @@ model User {
   role          Role         @default(USER)
   updatedAt     DateTime     @updatedAt
   createAt      DateTime     @default(now())
+  lastUseAt     DateTime?
+  gender        Gender?      @default(UNSET)
+  password      String
+  article       Article[]
+  followed      FriendShip[] @relation("Followed")
+  following     FriendShip[] @relation("Following")
   message       Message[]
   post          Post[]
-  article       Article[]
-  following     FriendShip[] @relation("Following")
-  followed      FriendShip[] @relation("Followed")
-  gender        Gender?      @default(UNSET)
 }
 
 model Message {
   id          String   @id @default(uuid())
   context     String   @db.VarChar(511)
   createAt    DateTime @default(now())
-  from        User     @relation(fields: [fromUserUid], references: [uid])
   fromUserUid Int
   toUserUid   Int
+  from        User     @relation(fields: [fromUserUid], references: [uid])
 }
 
 model Post {
@@ -44,28 +43,28 @@ model Post {
   context     String   @db.VarChar(5000)
   createAt    DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  user        User     @relation(fields: [userUid], references: [uid])
   userUid     Int
   likeUserUid Int[]
+  user        User     @relation(fields: [userUid], references: [uid])
 }
 
 model Article {
   id        String   @id @default(uuid())
-  User      User     @relation(fields: [userUid], references: [uid])
   userUid   Int
   createAt  DateTime @default(now())
   updatedAt DateTime @updatedAt
   context   String   @db.VarChar(50000)
   title     String   @db.VarChar(50)
+  User      User     @relation(fields: [userUid], references: [uid])
 }
 
 model FriendShip {
   id               String   @id @default(uuid())
-  followingUser    User     @relation("Following", fields: [followingUserUid], references: [uid])
-  followedUser     User     @relation("Followed", fields: [followedUserUid], references: [uid])
   followingUserUid Int
   followedUserUid  Int
   startAt          DateTime @default(now())
+  followedUser     User     @relation("Followed", fields: [followedUserUid], references: [uid])
+  followingUser    User     @relation("Following", fields: [followingUserUid], references: [uid])
 }
 
 enum Role {

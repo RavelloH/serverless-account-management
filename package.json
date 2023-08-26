@@ -17,7 +17,12 @@
   },
   "homepage": "https://github.com/RavelloH/serverless-account-management#readme",
   "dependencies": {
-    "@prisma/client": "^5.1.1",
-    "@vercel/postgres": "^0.4.1"
+    "@prisma/client": "^5.2.0",
+    "argon2": "^0.31.0",
+    "jsonwebtoken": "^9.0.1",
+    "ref-napi": "^3.0.3"
+  },
+  "devDependencies": {
+    "prisma": "5.1.1"
   }
 }
