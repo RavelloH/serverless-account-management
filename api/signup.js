@@ -24,14 +24,14 @@ async function signup(username, nickname, email, password) {
     })
 }
 async function encrypt(password) {
-  const pwd = Buffer.from(shuffler(password));
+  const pwd = shuffler(password);
   const options = {
     timeCost: 4,
     memoryCost: 65536,
     parallelism: 4,
     hashLength: 32,
   };
-  const hashedPassword = await argon2.hash(pwd);
+  const hashedPassword = await argon2.hash(pwd,options);
   return hashedPassword
 }
 
