@@ -61,7 +61,7 @@ module.exports = (req, res) => {
     }
 
     // 检查唯一性
-    let uniqueCheck = await prisma.user.findUnique({
+    prisma.user.findUnique({
         where: {
             OR: [{
                 email: infoJSON.email
@@ -71,11 +71,11 @@ module.exports = (req, res) => {
                 },
             ],
         },
-    })
-    console.log('[uniqueCheck]', timeMonitor(startTime))
-    console.log(uniqueCheck)
+    }).then((result) => {
+        console.log('[uniqueCheck]', timeMonitor(startTime))
+        console.log(result)
 
-    if (uniqueCheck.length !== 0) {
+    if (result.length !== 0) {
         newResponse(res, 400, '用户名/邮箱已被占用')
     } else {
         // 注册流程
@@ -91,4 +91,5 @@ module.exports = (req, res) => {
             await prisma.$disconnect()
         })
     }
+    })
 }
