@@ -6,10 +6,9 @@ const newResponse = require('../utils/response')
 const shuffler = require('../utils/shuffler')
 const timeMonitor = require('../utils/time')
 console.log('[Request]', 'Sign Up')
-let startTime = Date.now()
-
 const prisma = new PrismaClient()
-console.log('[DB Connected]', timeMonitor(startTime))
+
+let startTime
 
 // 注册器
 async function signup(username, nickname, email, password) {
@@ -42,6 +41,7 @@ function encrypt(password) {
 }
 
 module.exports = (req, res) => {
+    startTime = Date.now()
     const {
         info
     } = req.query;
@@ -73,6 +73,7 @@ module.exports = (req, res) => {
         },
     })
     console.log('[uniqueCheck]', timeMonitor(startTime))
+    console.log(uniqueCheck)
 
     if (uniqueCheck.length !== 0) {
         newResponse(res, 400, '用户名/邮箱已被占用')
