@@ -1,9 +1,4 @@
 function newResponse(response, statusCode, message, inner) {
-    response.writeHead(statusCode, {
-        'Content-Type': 'application/json',
-        'Platform-Name': 'RPlatform'
-    })
-    
     let returnMessage = {
         'code': statusCode,
         'message': message,
