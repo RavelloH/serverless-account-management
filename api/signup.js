@@ -6,7 +6,7 @@ const newResponse = require('../utils/response')
 const shuffler = require('../utils/shuffler')
 const timeMonitor = require('../utils/time')
 console.log('[Request]', 'Sign Up')
-let startTime = new Date.now()
+let startTime = Date.now()
 
 const prisma = new PrismaClient()
 console.log('[DB Connected]', timeMonitor(startTime))
