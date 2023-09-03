@@ -76,19 +76,18 @@ module.exports = (req, res) => {
 
     if (uniqueCheck.length !== 0) {
         newResponse(res, 400, '用户名/邮箱已被占用')
-        return
+    } else {
+        // 注册流程
+        signup(infoJSON.username, infoJSON.nickname, infoJSON.email, infoJSON.password)
+        .then(async () => {
+            newResponse(res, 200, '注册成功')
+            await prisma.$disconnect()
+            console.log('[Response]', timeMonitor(startTime))
+        })
+        .catch(async (e) => {
+            console.error(e)
+            newResponse(res, 500, '注册失败: '+e)
+            await prisma.$disconnect()
+        })
     }
-
-    // 注册流程
-    signup(infoJSON.username, infoJSON.nickname, infoJSON.email, infoJSON.password)
-    .then(async () => {
-        newResponse(res, 200, '注册成功')
-        await prisma.$disconnect()
-        console.log('[Response]', timeMonitor(startTime))
-    })
-    .catch(async (e) => {
-        console.error(e)
-        newResponse(res, 500, '注册失败: '+e)
-        await prisma.$disconnect()
-    })
 }
