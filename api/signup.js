@@ -61,18 +61,17 @@ module.exports = (req, res) => {
   }
 
   // 检查唯一性
-  prisma.user
-    .findUnique({
-      where: {
-        OR: [
-          {
-            email: infoJSON.email,
-          },
-          {
-            username: infoJSON.username,
-          },
-        ],
-      },
+  prisma.user.findMany({
+        where: {
+            OR: [
+              {
+                email: infoJSON.email
+              },
+              {
+                username: infoJSON.username
+              },
+            ],
+        },
     })
     .then((result) => {
       console.log("[uniqueCheck]", timeMonitor(startTime));
