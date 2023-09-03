@@ -12,7 +12,7 @@ function newResponse(response, statusCode, message, inner) {
     let messageJson = JSON.stringify(returnMessage,null,2)
     
     console.log('[Return]',statusCode,returnMessage)
-    response.end(returnMessage)
+    response.json(returnMessage)
 }
 
 module.exports = newResponse;
