@@ -61,7 +61,7 @@ module.exports = (req, res) => {
     }
 
     // 检查唯一性
-    let uniqueCheck = prisma.user.findUnique({
+    let uniqueCheck = await prisma.user.findUnique({
         where: {
             OR: [{
                 email: infoJSON.email
