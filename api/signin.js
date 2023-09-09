@@ -10,7 +10,7 @@ const prisma = new PrismaClient();
 
 let startTime;
 let isPasswordOK
-let shufflerPassword 
+let shufflerPassword
 // 密码登录
 async function signin(username, nickname, email, password) {
     let encryptPassword = await encrypt(password);
@@ -52,12 +52,8 @@ module.exports = (req, res) => {
 
     console.log("[Info]", timeMonitor(startTime), info);
 
-    try {
-        let infoJSON = JSON.parse(info);
-    } catch {
-        newResponse(res, 400, "参数解析无效");
-        return
-    }
+    let infoJSON = JSON.parse(info);
+
     console.log("[InfoJSON]", timeMonitor(startTime), infoJSON);
 
     // 登录模式分发
@@ -91,7 +87,7 @@ module.exports = (req, res) => {
                 console.log(result)
                 // 验证密码
                 shufflerPassword = shuffler(infoJSON.password)
-                isPasswordOK = argon2.verify(result.password,shufflerPassword)
+                isPasswordOK = argon2.verify(result.password, shufflerPassword)
                 if (isPasswordOK) {
                     newResponse(res, 200, "登录成功");
                 } else {
