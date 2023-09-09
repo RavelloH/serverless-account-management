@@ -48,10 +48,15 @@ module.exports = (req, res) => {
         newResponse(res, 400, "请提供必要的参数");
         return
     }
-    
+
     console.log("[Info]", timeMonitor(startTime), info);
 
-    let infoJSON = JSON.parse(info);
+    try {
+        let infoJSON = JSON.parse(info);
+    } catch {
+        newResponse(res, 400, "参数解析无效");
+        return
+    }
     console.log("[InfoJSON]", timeMonitor(startTime), infoJSON);
 
     // 验证格式
@@ -70,8 +75,8 @@ module.exports = (req, res) => {
         newResponse(res, 400, "密码位数不正确，需要32位");
         return
     }
-    
-    // 验证长度 
+
+    // 验证长度
     if (
         infoJSON.username.length > 10 ||
         infoJSON.nickname > 50
@@ -113,7 +118,7 @@ module.exports = (req, res) => {
             })
             .catch(async (e) => {
                 console.error(e);
-                newResponse(res, 500, "注册失败: " + e); 
+                newResponse(res, 500, "注册失败: " + e);
                 await prisma.$disconnect();
             });
         }
