@@ -51,12 +51,7 @@ module.exports = (req, res) => {
 
     console.log("[Info]", timeMonitor(startTime), info);
 
-    try {
-        let infoJSON = JSON.parse(info);
-    } catch {
-        newResponse(res, 400, "参数解析无效");
-        return
-    }
+    let infoJSON = JSON.parse(info);
     console.log("[InfoJSON]", timeMonitor(startTime), infoJSON);
 
     // 验证格式
