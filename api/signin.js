@@ -9,7 +9,8 @@ console.log("[Request]", "Sign In");
 const prisma = new PrismaClient();
 
 let startTime;
-
+let isPasswordOK
+let shufflerPassword 
 // 密码登录
 async function signin(username, nickname, email, password) {
     let encryptPassword = await encrypt(password);
@@ -87,8 +88,11 @@ module.exports = (req, res) => {
             if (result.length == 0) {
                 newResponse(res, 400, "未找到此账号，请先注册");
             } else {
+                console.log(result)
                 // 验证密码
-                if (await argon2.verify(result.password, shuffler(infoJSON.password))) {
+                shufflerPassword = shuffler(infoJSON.password)
+                isPasswordOK = await argon2.verify(result.password,shufflerPassword)
+                if (isPasswordOK) {
                     newResponse(res, 200, "登录成功");
                 } else {
                     newResponse(res, 400, "密码错误");
