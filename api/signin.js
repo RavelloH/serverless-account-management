@@ -71,7 +71,7 @@ module.exports = (req, res) => {
             newResponse(res, 400, "密码位数不正确，需要32位");
             return
         }
-        
+
         // 查询是否有此用户
         prisma.user.findMany({
             where: {
@@ -88,7 +88,7 @@ module.exports = (req, res) => {
                 newResponse(res, 400, "未找到此账号，请先注册");
             } else {
                 // 验证密码
-                if (await argon2.verify(result.password), shuffler(infoJSON.password ))) {
+                if (await argon2.verify(result.password), shuffler(infoJSON.password)) {
                     newResponse(res, 200, "登录成功");
                 } else {
                     newResponse(res, 400, "密码错误");
