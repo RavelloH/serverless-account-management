@@ -44,6 +44,11 @@ module.exports = (req, res) => {
     const {
         info
     } = req.query;
+    if (typeof info == 'undefined') {
+        newResponse(res, 400, "请提供必要的参数");
+        return
+    }
+    
     console.log("[Info]", timeMonitor(startTime), info);
 
     let infoJSON = JSON.parse(info);
