@@ -7,10 +7,10 @@ const token = {
             expiresIn: expired
         });
     },
-    verify: function(tokenText) {
+    verify: function(tokenText, callback) {
         return jwt.verify(tokenText, process.env.JWT_PUB_KEY, {
             algorithm: 'RS512'
-        });
+        }, callback(err,decoded));
     }
 }
 

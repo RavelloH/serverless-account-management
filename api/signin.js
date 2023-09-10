@@ -30,19 +30,6 @@ async function signin(username, nickname, email, password) {
     console.log("[DB Writed]", timeMonitor(startTime));
 }
 
-// 加密器
-function encrypt(password) {
-    const pwd = shuffler(password);
-    console.log("[Shuffler Done]", timeMonitor(startTime));
-    const options = {
-        timeCost: 3,
-        memoryCost: 65536,
-        parallelism: 8,
-        hashLength: 32,
-    };
-    const hashedPassword = argon2.hash(shuffler(password), options);
-    return hashedPassword;
-}
 
 module.exports = (req, res) => {
     startTime = Date.now();
@@ -62,6 +49,17 @@ module.exports = (req, res) => {
     // 登录模式分发
     if (typeof infoJSON.token !== 'undefined') {
         // JWT 刷新登录
+
+        // 检查传入的token
+        token.verify(infoJSON.token, function(err, decoded) {
+            if (err) {
+                newResponse(res, 401, "登录失败")
+            } else {
+                newResponse(res, 200, "登录成功");
+                return
+            }
+        })
+
 
     } else if (typeof infoJSON.account !== 'undefined' && typeof infoJSON.password !== 'undefined') {
         // 密码登录
@@ -93,6 +91,7 @@ module.exports = (req, res) => {
                 argon2.verify(result[0].password, shufflerPassword).then((passwordValidate) => {
                     isPasswordOK = passwordValidate
                 })
+
                 console.log("[isPasswordOK]", timeMonitor(startTime), isPasswordOK);
                 if (isPasswordOK) {
                     newResponse(res, 200, "登录成功", {
