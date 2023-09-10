@@ -51,14 +51,18 @@ module.exports = (req, res) => {
         // JWT 刷新登录
 
         // 检查传入的token
-        token.verify(infoJSON.token, function(err, decoded) {
+        let tokenInfo = token.verify(infoJSON.token, function(err, decoded) {
             if (err) {
+                console.log('登录失败')
                 newResponse(res, 401, "登录失败")
+                return
             } else {
                 newResponse(res, 200, "登录成功");
                 return
             }
         })
+        console.log('token解码',tokenInfo)
+        return
 
 
     } else if (typeof infoJSON.account !== 'undefined' && typeof infoJSON.password !== 'undefined') {
