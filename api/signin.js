@@ -110,17 +110,16 @@ module.exports = (req, res) => {
                 shufflerPassword = shuffler(infoJSON.password)
                 argon2.verify(result.password, shufflerPassword).then((passwordValidate) => {
                     isPasswordOK = passwordValidate
+                    console.log("[isPasswordOK]", timeMonitor(startTime), isPasswordOK);
+                    if (isPasswordOK) {
+                        newResponse(res, 200, "登录成功", {
+                            info: pack(result),
+                            token: token.sign(pack(result))
+                        });
+                    } else {
+                        newResponse(res, 400, "密码错误");
+                    }
                 })
-
-                console.log("[isPasswordOK]", timeMonitor(startTime), isPasswordOK);
-                if (isPasswordOK) {
-                    newResponse(res, 200, "登录成功", {
-                        info: pack(result),
-                        token: token.sign(pack(result))
-                    });
-                } else {
-                    newResponse(res, 400, "密码错误");
-                }
             }
         })
 
