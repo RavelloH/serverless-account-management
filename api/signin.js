@@ -86,7 +86,7 @@ module.exports = (req, res) => {
                 console.log(result)
                 // 验证密码
                 shufflerPassword = shuffler(infoJSON.password)
-                isPasswordOK = argon2.verify(result.password, shufflerPassword)
+                isPasswordOK = await argon2.verify(result[0].password, shufflerPassword)
                 console.log("[isPasswordOK]", timeMonitor(startTime), isPasswordOK);
                 if (isPasswordOK) {
                     newResponse(res, 200, "登录成功");
