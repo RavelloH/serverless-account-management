@@ -5,6 +5,8 @@ const argon2 = require("argon2");
 const newResponse = require("../utils/response");
 const shuffler = require("../utils/shuffler");
 const timeMonitor = require("../utils/time");
+const pack = require("../utils/pack");
+
 console.log("[Request]", "Sign In");
 const prisma = new PrismaClient();
 
@@ -92,7 +94,7 @@ module.exports = (req, res) => {
                 })
                 console.log("[isPasswordOK]", timeMonitor(startTime), isPasswordOK);
                 if (isPasswordOK) {
-                    newResponse(res, 200, "登录成功");
+                    newResponse(res, 200, "登录成功", pack(result[0]));
                 } else {
                     newResponse(res, 400, "密码错误");
                 }
