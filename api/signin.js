@@ -56,11 +56,27 @@ module.exports = (req, res) => {
             tokenInfo = token.verify(infoJSON.token)
         } catch(err) {
             console.log(err)
-            newResponse(res, 400, 'token无效')
+            if (err.name == TokenExpiredError) {
+                newResponse(res, 410, 'TOKEN已过期，请重新登录')
+            } else {
+                newResponse(res, 400, 'TOKEN无效')
+            }
         }
+
+        // 刷新TOKEN
         if (tokenInfo) {
-            console.log('token解码', tokenInfo)
-            newResponse(res, 400, '登录成功')
+            console.log('token解码成功', tokenInfo)
+            // 请求新信息
+            prisma.user.findUnique({
+                where: {
+                    uid: tokenInfo.uid
+                }
+            }).then((result) => {
+                newResponse(res, 200, "登录成功", {
+                    info: pack(result),
+                    token: token.sign(pack(result))
+                });
+            })
             return
         }
 
@@ -75,7 +91,7 @@ module.exports = (req, res) => {
         }
 
         // 查询是否有此用户
-        prisma.user.findMany({
+        prisma.user.findFirst({
             where: {
                 OR: [{
                     email: infoJSON.account
@@ -92,15 +108,15 @@ module.exports = (req, res) => {
                 console.log(result)
                 // 验证密码
                 shufflerPassword = shuffler(infoJSON.password)
-                argon2.verify(result[0].password, shufflerPassword).then((passwordValidate) => {
+                argon2.verify(result.password, shufflerPassword).then((passwordValidate) => {
                     isPasswordOK = passwordValidate
                 })
 
                 console.log("[isPasswordOK]", timeMonitor(startTime), isPasswordOK);
                 if (isPasswordOK) {
                     newResponse(res, 200, "登录成功", {
-                        info: pack(result[0]),
-                        token: token.sign(pack(result[0]))
+                        info: pack(result),
+                        token: token.sign(pack(result))
                     });
                 } else {
                     newResponse(res, 400, "密码错误");
