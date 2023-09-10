@@ -97,7 +97,7 @@ module.exports = (req, res) => {
                 if (isPasswordOK) {
                     newResponse(res, 200, "登录成功", {
                         info: pack(result[0]),
-                        token: token.sign(result[0])
+                        token: token.sign(pack(result[0]))
                     });
                 } else {
                     newResponse(res, 400, "密码错误");
