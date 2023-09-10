@@ -55,7 +55,6 @@ module.exports = (req, res) => {
     let infoJSON = JSON.parse(info);
 
     console.log("[InfoJSON]", timeMonitor(startTime), infoJSON);
-
     // 登录模式分发
     if (typeof infoJSON.token !== 'undefined') {
         // JWT 刷新登录
@@ -88,6 +87,7 @@ module.exports = (req, res) => {
                 // 验证密码
                 shufflerPassword = shuffler(infoJSON.password)
                 isPasswordOK = argon2.verify(result.password, shufflerPassword)
+                console.log("[isPasswordOK]", timeMonitor(startTime), isPasswordOK);
                 if (isPasswordOK) {
                     newResponse(res, 200, "登录成功");
                 } else {
