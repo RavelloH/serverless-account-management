@@ -100,43 +100,4 @@ module.exports = (req, res) => {
         newResponse(res, 400, "缺少必须的参数");
         return
     }
-
-    // 检查唯一性
-    prisma.user.findMany({
-        where: {
-            OR: [{
-                email: infoJSON.email
-            },
-                {
-                    username: infoJSON.username
-                },
-            ],
-        },
-    })
-    .then((result) => {
-        console.log("[uniqueCheck]", timeMonitor(startTime));
-        console.log(result);
-
-        if (result.length !== 0) {
-            newResponse(res, 400, "用户名/邮箱已被占用");
-        } else {
-            // 注册流程
-            signup(
-                infoJSON.username,
-                infoJSON.nickname,
-                infoJSON.email,
-                infoJSON.password,
-            )
-            .then(async () => {
-                newResponse(res, 200, "注册成功");
-                await prisma.$disconnect();
-                console.log("[Response]", timeMonitor(startTime));
-            })
-            .catch(async (e) => {
-                console.error(e);
-                newResponse(res, 500, "注册失败: " + e);
-                await prisma.$disconnect();
-            });
-        }
-    });
 };
