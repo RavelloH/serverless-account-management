@@ -11,6 +11,7 @@ const prisma = new PrismaClient();
 let startTime;
 let isPasswordOK
 let shufflerPassword
+
 // 密码登录
 async function signin(username, nickname, email, password) {
     let encryptPassword = await encrypt(password);
@@ -86,7 +87,9 @@ module.exports = (req, res) => {
                 console.log(result)
                 // 验证密码
                 shufflerPassword = shuffler(infoJSON.password)
-                isPasswordOK = await argon2.verify(result[0].password, shufflerPassword)
+                argon2.verify(result[0].password, shufflerPassword).then((passwordValidate) => {
+                    isPasswordOK = passwordValidate
+                })
                 console.log("[isPasswordOK]", timeMonitor(startTime), isPasswordOK);
                 if (isPasswordOK) {
                     newResponse(res, 200, "登录成功");
