@@ -22,7 +22,7 @@ async function updateTime(uid, time) {
             uid: uid
         },
         data: {
-            lastUseAt: time
+            lastUseAt: time+''
         },
     });
     console.log("[DB Writed]", timeMonitor(startTime));
