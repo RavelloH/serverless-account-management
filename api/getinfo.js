@@ -51,8 +51,7 @@ module.exports = (req, res) => {
         }).then((result) => {
             updateTime(result.uid, startTime)
             newResponse(res, 200, "信息获取成功", {
-                info: pack(result, startTime),
-                token: token.sign(pack(result, startTime))
+                info: pack(result, startTime)
             });
         })
     }
