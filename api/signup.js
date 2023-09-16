@@ -80,6 +80,22 @@ module.exports = (req, res) => {
         return
     }
 
+    // 检查邮箱
+    if (
+        !/\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}/.test(infoJSON.email)
+    ) {
+        newResponse(res, 400, "邮箱格式错误");
+        return
+    }
+
+    // 检查用户名
+    if (
+        !/^[a-z0-9_]+$/.test(infoJSON.username)
+    ) {
+        newResponse(res, 400, "用户名中包含非法字符");
+        return
+    }
+
     // 检查唯一性
     prisma.user.findMany({
         where: {
