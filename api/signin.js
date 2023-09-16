@@ -15,16 +15,14 @@ let startTime;
 let isPasswordOK
 let shufflerPassword
 
-// 密码登录
-async function signin(username, nickname, email, password) {
-    let encryptPassword = await encrypt(password);
-    console.log("[PWD Hash Generated]", timeMonitor(startTime));
-    await prisma.user.create({
+// 更新时间
+async function updateTime(uid, time) {
+    await prisma.user.update({
+        where: {
+            uid: uid
+        },
         data: {
-            username: username,
-            nickname: nickname,
-            email: email,
-            password: encryptPassword,
+            lastUseAt: time
         },
     });
     console.log("[DB Writed]", timeMonitor(startTime));
@@ -56,7 +54,7 @@ module.exports = (req, res) => {
             tokenInfo = token.verify(infoJSON.token)
         } catch(err) {
             console.log(err)
-            if (err.name == TokenExpiredError) {
+            if (err.name == 'TokenExpiredError') {
                 newResponse(res, 410, 'TOKEN已过期，请重新登录')
             } else {
                 newResponse(res, 400, 'TOKEN无效')
@@ -72,10 +70,17 @@ module.exports = (req, res) => {
                     uid: tokenInfo.uid
                 }
             }).then((result) => {
-                newResponse(res, 200, "登录成功", {
-                    info: pack(result),
-                    token: token.sign(pack(result))
-                });
+                // 检查此Token是否为最新
+                if (result.lastUseAt == tokenInfo.lastUseAt) {
+                    updateTime(result.uid, startTime)
+                    newResponse(res, 200, "登录成功", {
+                        info: pack(result),
+                        token: token.sign(pack(result, startTime))
+                    });
+                } else {
+                    newResponse(res, 420, "Token不处于激活状态");
+                }
+
             })
             return
         }
@@ -112,10 +117,12 @@ module.exports = (req, res) => {
                     isPasswordOK = passwordValidate
                     console.log("[isPasswordOK]", timeMonitor(startTime), isPasswordOK);
                     if (isPasswordOK) {
+                        updateTime(result.uid, startTime)
                         newResponse(res, 200, "登录成功", {
-                            info: pack(result),
+                            info: pack(result, startTime),
                             token: token.sign(pack(result))
                         });
+
                     } else {
                         newResponse(res, 400, "密码错误");
                     }
