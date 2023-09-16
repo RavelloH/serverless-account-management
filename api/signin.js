@@ -71,6 +71,7 @@ module.exports = (req, res) => {
                 }
             }).then((result) => {
                 // 检查此Token是否为最新
+                console.log(result.lastUseAt,tokenInfo.lastUseAt+'')
                 if (result.lastUseAt == tokenInfo.lastUseAt+'') {
                     updateTime(result.uid, startTime)
                     newResponse(res, 200, "登录成功", {
