@@ -11,7 +11,7 @@ function pack(userinfo,time) {
         role: userinfo.role,
         updatedAt: userinfo.updatedAt,
         createAt: userinfo.createAt,
-        lastUseAt: time,
+        lastUseAt: time+'',
         gender: userinfo.gender,
     }
 }
