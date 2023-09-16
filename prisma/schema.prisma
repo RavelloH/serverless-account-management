@@ -19,7 +19,7 @@ model User {
   role          Role         @default(USER)
   updatedAt     DateTime     @updatedAt
   createAt      DateTime     @default(now())
-  lastUseAt     DateTime?    @db.Timestamptz
+  lastUseAt     String?
   gender        Gender?      @default(UNSET)
   password      String
   article       Article[]
