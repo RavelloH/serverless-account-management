@@ -1,4 +1,4 @@
-function pack(userinfo,time) {
+function pack(userinfo,timestamp) {
     return {
         uid: userinfo.uid,
         username: userinfo.username,
@@ -11,7 +11,7 @@ function pack(userinfo,time) {
         role: userinfo.role,
         updatedAt: userinfo.updatedAt,
         createAt: userinfo.createAt,
-        lastUseAt: time+'',
+        lastUseAt: timestamp+'',
         gender: userinfo.gender,
     }
 }
