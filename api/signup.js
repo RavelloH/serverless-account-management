@@ -9,6 +9,7 @@ console.log("[Request]", "Sign Up");
 const prisma = new PrismaClient();
 
 let startTime;
+let infoJSON
 
 // 注册器
 async function signup(username, nickname, email, password) {
@@ -49,12 +50,7 @@ module.exports = (req, res) => {
 
     console.log("[Info]", timeMonitor(startTime), info);
     
-    let infoJSON
-    if (info.charAt(0)=='{') {
-        infoJSON = JSON.parse(info);
-    } else {
-        infoJSON = JSON.parse(base.decrypt(info));
-    }
+    infoJSON = JSON.stringify(info)
 
     console.log("[InfoJSON]", timeMonitor(startTime), infoJSON);
 
