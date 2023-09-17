@@ -41,9 +41,7 @@ function encrypt(password) {
 
 module.exports = (req, res) => {
     startTime = Date.now();
-    const {
-        info
-    } = req.query;
+    const info = req.body;
     if (typeof info == 'undefined') {
         newResponse(res, 400, "请提供必要的参数");
         return
