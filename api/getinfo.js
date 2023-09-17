@@ -7,6 +7,7 @@ const shuffler = require("../utils/shuffler");
 const timeMonitor = require("../utils/time");
 const pack = require("../utils/pack");
 const token = require("../utils/token");
+const base = require("../utils/base");
 
 console.log("[Request]", "Get info");
 const prisma = new PrismaClient();
@@ -24,8 +25,12 @@ module.exports = (req, res) => {
     }
 
     console.log("[Info]", timeMonitor(startTime), info);
-
-    let infoJSON = JSON.parse(info);
+    let infoJSON
+    if (info.startWith('{')) {
+        infoJSON = JSON.parse(info);
+    } else {
+        InfoJSON = JSON.parse(base.decrypt(info));
+    }
 
     console.log("[InfoJSON]", timeMonitor(startTime), infoJSON);
 
@@ -41,6 +46,6 @@ module.exports = (req, res) => {
             });
         })
     } else {
-        newResponse(res, 400 , "请提供uid")
+        newResponse(res, 400, "请提供uid")
     }
 };

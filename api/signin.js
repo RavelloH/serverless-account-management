@@ -41,7 +41,13 @@ module.exports = (req, res) => {
 
     console.log("[Info]", timeMonitor(startTime), info);
 
-    let infoJSON = JSON.parse(info);
+    let infoJSON
+    if (info.startWith('{')) {
+        infoJSON = JSON.parse(info);
+    } else {
+        InfoJSON = JSON.parse(base.decrypt(info));
+    }
+
 
     console.log("[InfoJSON]", timeMonitor(startTime), infoJSON);
     // 登录模式分发
