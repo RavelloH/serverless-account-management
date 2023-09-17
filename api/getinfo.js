@@ -20,7 +20,7 @@ module.exports = (req, res) => {
     if (uid) {
         prisma.user.findUnique({
             where: {
-                uid: infoJSON.uid
+                uid: uid
             }
         }).then((result) => {
             newResponse(res, 200, "信息获取成功", {
