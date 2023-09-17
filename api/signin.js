@@ -39,7 +39,7 @@ module.exports = (req, res) => {
     }
     console.log("[Info]", timeMonitor(startTime), info);
 
-    infoJSON = JSON.stringify(info)
+    infoJSON = info
 
 
     console.log("[InfoJSON]", timeMonitor(startTime), infoJSON);
