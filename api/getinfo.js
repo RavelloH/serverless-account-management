@@ -26,7 +26,7 @@ module.exports = (req, res) => {
 
     console.log("[Info]", timeMonitor(startTime), info);
     let infoJSON
-    console.log('测试',JSON.parse(base.decrypt(info))
+    console.log('测试',JSON.parse(base.decrypt(info)))
     if (info.charAt(0)=='{') {
         infoJSON = JSON.parse(info);
     } else {
