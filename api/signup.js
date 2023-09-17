@@ -55,7 +55,7 @@ module.exports = (req, res) => {
     if (info.charAt(0)=='{') {
         infoJSON = JSON.parse(info);
     } else {
-        InfoJSON = JSON.parse(base.decrypt(info));
+        infoJSON = JSON.parse(base.decrypt(info));
     }
 
     console.log("[InfoJSON]", timeMonitor(startTime), infoJSON);

@@ -26,13 +26,10 @@ module.exports = (req, res) => {
 
     console.log("[Info]", timeMonitor(startTime), info);
     let infoJSON
-    console.log('测试',JSON.parse(base.decrypt(info)))
     if (info.charAt(0)=='{') {
         infoJSON = JSON.parse(info);
-        console.log('无base')
     } else {
-        console.log('有base')
-        InfoJSON = JSON.parse(base.decrypt(info));
+        infoJSON = JSON.parse(base.decrypt(info));
     }
 
     console.log("[InfoJSON]", timeMonitor(startTime), infoJSON);
