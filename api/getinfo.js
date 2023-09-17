@@ -29,21 +29,8 @@ module.exports = (req, res) => {
 
     console.log("[InfoJSON]", timeMonitor(startTime), infoJSON);
 
-    // 检验token是否有效
-    let tokenInfo
-    try {
-        tokenInfo = token.verify(infoJSON.token)
-    } catch(err) {
-        console.log(err)
-        if (err.name == 'TokenExpiredError') {
-            newResponse(res, 410, 'TOKEN已过期，请重新登录')
-        } else {
-            newResponse(res, 400, 'TOKEN无效')
-        }
-    }
-
     // 获取信息
-    if (tokenInfo) {
+    if (infoJSON.uid) {
         prisma.user.findUnique({
             where: {
                 uid: infoJSON.uid
@@ -53,5 +40,7 @@ module.exports = (req, res) => {
                 info: pack(result, startTime)
             });
         })
+    } else {
+        newResponse(res, 400 , "请提供uid")
     }
 };
