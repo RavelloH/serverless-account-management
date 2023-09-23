@@ -47,6 +47,13 @@ module.exports = (req, res) => {
         newResponse(res, 400, "请提供必要的参数");
         return
     }
+        if (typeof info == 'string') {
+        try {
+            info = JSON.parse(info)
+        } catch (e) {
+            newResponse(400, "无法解析此请求", e)
+        }
+    }
 
     console.log("[Info]", timeMonitor(startTime), info);
     

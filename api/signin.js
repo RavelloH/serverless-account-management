@@ -33,9 +33,16 @@ async function updateTime(uid, time) {
 module.exports = (req, res) => {
     startTime = Date.now();
     const info = req.body;
-    if (typeof info == 'undefined' || typeof info == 'string') {
+    if (typeof info == 'undefined') {
         newResponse(res, 400, "请提供必要的参数");
         return
+    }
+    if (typeof info == 'string') {
+        try {
+            info = JSON.parse(info)
+        } catch (e) {
+            newResponse(400, "无法解析此请求", e)
+        }
     }
     console.log("[Info]", timeMonitor(startTime), info);
 
