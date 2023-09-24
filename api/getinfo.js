@@ -16,22 +16,19 @@ module.exports = (req, res) => {
     const {
         uid
     } = req.query;
-
-    rateLimitControl(req).then((result) => {
-        if (result) {
-            if (uid) {
-                prisma.user.findUnique({
-                    where: {
-                        uid: parseInt(uid)
-                    }
-                }).then((result) => {
-                    newResponse(res, 200, "信息获取成功", {
-                        info: pack(result, startTime)
-                    });
-                })
-            } else {
-                newResponse(res, 400, "请提供uid")
+    
+    console.log(rateLimitControl(req))
+    if (uid) {
+        prisma.user.findUnique({
+            where: {
+                uid: parseInt(uid)
             }
-        }
-    })
+        }).then((result) => {
+            newResponse(res, 200, "信息获取成功", {
+                info: pack(result, startTime)
+            });
+        })
+    } else {
+        newResponse(res, 400, "请提供uid")
+    }
 };
