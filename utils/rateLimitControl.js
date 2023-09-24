@@ -41,3 +41,5 @@ async function rateLimitControl(request) {
 
     return count <= 20;
 }
+
+module.exports = rateLimitControl;
