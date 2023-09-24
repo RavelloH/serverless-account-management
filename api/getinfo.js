@@ -16,10 +16,10 @@ module.exports = (req, res) => {
     const {
         uid
     } = req.query;
-    
-    rateLimitControl(req).then((result) => {
-        if (result) {
-            if (uid) {
+
+    if (uid) {
+        rateLimitControl(req).then((result) => {
+            if (result) {
                 prisma.user.findUnique({
                     where: {
                         uid: parseInt(uid)
@@ -30,8 +30,10 @@ module.exports = (req, res) => {
                     });
                 })
             } else {
-                newResponse(res, 400, "请提供uid")
+                newResponse(res, 429, "已触发速率限制")
             }
-        }
-    })
+        })
+    } else {
+        newResponse(res, 400, "请提供uid")
+    }
 };

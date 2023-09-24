@@ -50,95 +50,102 @@ module.exports = (req, res) => {
 
 
     console.log("[InfoJSON]", timeMonitor(startTime), infoJSON);
-    // 登录模式分发
-    if (typeof infoJSON.token !== 'undefined') {
-        // JWT 刷新登录
 
-        // 检查传入的token
-        let tokenInfo
-        try {
-            tokenInfo = token.verify(infoJSON.token)
-        } catch(err) {
-            console.log(err)
-            if (err.name == 'TokenExpiredError') {
-                newResponse(res, 410, 'TOKEN已过期，请重新登录')
-            } else {
-                newResponse(res, 400, 'TOKEN无效')
-            }
-        }
+    rateLimitControl(req).then((rate) => {
+        if (rate) {
+            // 登录模式分发
+            if (typeof infoJSON.token !== 'undefined') {
+                // JWT 刷新登录
 
-        // 刷新TOKEN
-        if (tokenInfo) {
-            console.log('token解码成功', tokenInfo)
-            // 请求新信息
-            prisma.user.findUnique({
-                where: {
-                    uid: tokenInfo.uid
-                }
-            }).then((result) => {
-                // 检查此Token是否为最新
-                console.log(result.lastUseAt, tokenInfo.lastUseAt+'')
-                if (result.lastUseAt == tokenInfo.lastUseAt+'') {
-                    updateTime(result.uid, startTime)
-                    newResponse(res, 200, "登录成功", {
-                        info: pack(result, startTime),
-                        token: token.sign(pack(result, startTime))
-                    });
-                } else {
-                    newResponse(res, 420, "Token不处于激活状态");
-                }
-
-            })
-            return
-        }
-
-
-    } else if (typeof infoJSON.account !== 'undefined' && typeof infoJSON.password !== 'undefined') {
-        // 密码登录
-
-        // 验证密码长度
-        if (infoJSON.password.length !== 32) {
-            newResponse(res, 400, "密码位数不正确，需要32位");
-            return
-        }
-
-        // 查询是否有此用户
-        prisma.user.findFirst({
-            where: {
-                OR: [{
-                    email: infoJSON.account
-                },
-                    {
-                        username: infoJSON.account
-                    },
-                ],
-            },
-        }).then((result) => {
-            if (result.length == 0) {
-                newResponse(res, 400, "未找到此账号，请先注册");
-            } else {
-                console.log(result)
-                // 验证密码
-                shufflerPassword = shuffler(infoJSON.password)
-                argon2.verify(result.password, shufflerPassword).then((passwordValidate) => {
-                    isPasswordOK = passwordValidate
-                    console.log("[isPasswordOK]", timeMonitor(startTime), isPasswordOK);
-                    if (isPasswordOK) {
-                        updateTime(result.uid, startTime)
-                        newResponse(res, 200, "登录成功", {
-                            info: pack(result, startTime),
-                            token: token.sign(pack(result, startTime))
-                        });
-
+                // 检查传入的token
+                let tokenInfo
+                try {
+                    tokenInfo = token.verify(infoJSON.token)
+                } catch(err) {
+                    console.log(err)
+                    if (err.name == 'TokenExpiredError') {
+                        newResponse(res, 410, 'TOKEN已过期，请重新登录')
                     } else {
-                        newResponse(res, 400, "密码错误");
+                        newResponse(res, 400, 'TOKEN无效')
+                    }
+                }
+
+                // 刷新TOKEN
+                if (tokenInfo) {
+                    console.log('token解码成功', tokenInfo)
+                    // 请求新信息
+                    prisma.user.findUnique({
+                        where: {
+                            uid: tokenInfo.uid
+                        }
+                    }).then((result) => {
+                        // 检查此Token是否为最新
+                        console.log(result.lastUseAt, tokenInfo.lastUseAt+'')
+                        if (result.lastUseAt == tokenInfo.lastUseAt+'') {
+                            updateTime(result.uid, startTime)
+                            newResponse(res, 200, "登录成功", {
+                                info: pack(result, startTime),
+                                token: token.sign(pack(result, startTime))
+                            });
+                        } else {
+                            newResponse(res, 420, "Token不处于激活状态");
+                        }
+
+                    })
+                    return
+                }
+
+
+            } else if (typeof infoJSON.account !== 'undefined' && typeof infoJSON.password !== 'undefined') {
+                // 密码登录
+
+                // 验证密码长度
+                if (infoJSON.password.length !== 32) {
+                    newResponse(res, 400, "密码位数不正确，需要32位");
+                    return
+                }
+
+                // 查询是否有此用户
+                prisma.user.findFirst({
+                    where: {
+                        OR: [{
+                            email: infoJSON.account
+                        },
+                            {
+                                username: infoJSON.account
+                            },
+                        ],
+                    },
+                }).then((result) => {
+                    if (result.length == 0) {
+                        newResponse(res, 400, "未找到此账号，请先注册");
+                    } else {
+                        console.log(result)
+                        // 验证密码
+                        shufflerPassword = shuffler(infoJSON.password)
+                        argon2.verify(result.password, shufflerPassword).then((passwordValidate) => {
+                            isPasswordOK = passwordValidate
+                            console.log("[isPasswordOK]", timeMonitor(startTime), isPasswordOK);
+                            if (isPasswordOK) {
+                                updateTime(result.uid, startTime)
+                                newResponse(res, 200, "登录成功", {
+                                    info: pack(result, startTime),
+                                    token: token.sign(pack(result, startTime))
+                                });
+
+                            } else {
+                                newResponse(res, 400, "密码错误");
+                            }
+                        })
                     }
                 })
-            }
-        })
 
-    } else {
-        newResponse(res, 400, "缺少必须的参数");
-        return
-    }
+            } else {
+                newResponse(res, 400, "缺少必须的参数");
+                return
+            }
+        } else {
+            newResponse(res, 429, "已触发速率限制")
+        }
+    })
 };

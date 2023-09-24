@@ -5,6 +5,8 @@ const argon2 = require("argon2");
 const newResponse = require("../utils/response");
 const shuffler = require("../utils/shuffler");
 const timeMonitor = require("../utils/time");
+const rateLimitControl = require("../utils/rateLimitControl")
+
 console.log("[Request]", "Sign Up");
 const prisma = new PrismaClient();
 
@@ -47,7 +49,7 @@ module.exports = (req, res) => {
         newResponse(res, 400, "请提供必要的参数");
         return
     }
-        if (typeof info == 'string') {
+    if (typeof info == 'string') {
         try {
             info = JSON.parse(info)
         } catch (e) {
@@ -56,7 +58,7 @@ module.exports = (req, res) => {
     }
 
     console.log("[Info]", timeMonitor(startTime), info);
-    
+
     infoJSON = info
 
     console.log("[InfoJSON]", timeMonitor(startTime), infoJSON);
@@ -103,42 +105,48 @@ module.exports = (req, res) => {
         return
     }
 
-    // 检查唯一性
-    prisma.user.findMany({
-        where: {
-            OR: [{
-                email: infoJSON.email
-            },
-                {
-                    username: infoJSON.username
+    rateLimitControl(req).then((rate) => {
+        if (rate) {
+            // 检查唯一性
+            prisma.user.findMany({
+                where: {
+                    OR: [{
+                        email: infoJSON.email
+                    },
+                        {
+                            username: infoJSON.username
+                        },
+                    ],
                 },
-            ],
-        },
-    })
-    .then((result) => {
-        console.log("[uniqueCheck]", timeMonitor(startTime));
-        console.log(result);
-
-        if (result.length !== 0) {
-            newResponse(res, 400, "用户名/邮箱已被占用");
-        } else {
-            // 注册流程
-            signup(
-                infoJSON.username,
-                infoJSON.nickname,
-                infoJSON.email,
-                infoJSON.password,
-            )
-            .then(async () => {
-                newResponse(res, 200, "注册成功");
-                await prisma.$disconnect();
-                console.log("[Response]", timeMonitor(startTime));
             })
-            .catch(async (e) => {
-                console.error(e);
-                newResponse(res, 500, "注册失败: " + e);
-                await prisma.$disconnect();
+            .then((result) => {
+                console.log("[uniqueCheck]", timeMonitor(startTime));
+                console.log(result);
+
+                if (result.length !== 0) {
+                    newResponse(res, 400, "用户名/邮箱已被占用");
+                } else {
+                    // 注册流程
+                    signup(
+                        infoJSON.username,
+                        infoJSON.nickname,
+                        infoJSON.email,
+                        infoJSON.password,
+                    )
+                    .then(async () => {
+                        newResponse(res, 200, "注册成功");
+                        await prisma.$disconnect();
+                        console.log("[Response]", timeMonitor(startTime));
+                    })
+                    .catch(async (e) => {
+                        console.error(e);
+                        newResponse(res, 500, "注册失败: " + e);
+                        await prisma.$disconnect();
+                    });
+                }
             });
+        } else {
+            newResponse(res, 429, "已触发速率限制")
         }
-    });
+    })
 };
