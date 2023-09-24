@@ -67,6 +67,12 @@ model FriendShip {
   followingUser    User     @relation("Following", fields: [followingUserUid], references: [uid])
 }
 
+model RequestLog {
+  id          Int      @id @default(autoincrement())
+  ip          String
+  requestTime DateTime
+}
+
 enum Role {
   USER
   MANAGER

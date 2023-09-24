@@ -4,6 +4,7 @@ const {
 const newResponse = require("../utils/response");
 const timeMonitor = require("../utils/time");
 const pack = require("../utils/pack");
+const rateLimitControl = require("../utils/rateLimitControl")
 
 console.log("[Request]", "Get info");
 const prisma = new PrismaClient();
@@ -16,18 +17,21 @@ module.exports = (req, res) => {
         uid
     } = req.query;
 
-    // 获取信息
-    if (uid) {
-        prisma.user.findUnique({
-            where: {
-                uid: parseInt(uid)
+    rateLimitControl(req).then((result) => {
+        if (result) {
+            if (uid) {
+                prisma.user.findUnique({
+                    where: {
+                        uid: parseInt(uid)
+                    }
+                }).then((result) => {
+                    newResponse(res, 200, "信息获取成功", {
+                        info: pack(result, startTime)
+                    });
+                })
+            } else {
+                newResponse(res, 400, "请提供uid")
             }
-        }).then((result) => {
-            newResponse(res, 200, "信息获取成功", {
-                info: pack(result, startTime)
-            });
-        })
-    } else {
-        newResponse(res, 400, "请提供uid")
-    }
+        }
+    })
 };
