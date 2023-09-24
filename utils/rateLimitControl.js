@@ -5,9 +5,12 @@ const {
 const prisma = new PrismaClient();
 
 async function rateLimitControl(request) {
-    const {
-        ip
-    } = request;
+    const ip = req.headers['x-real-ip'] ||
+        req.headers['x-forwarded-for'] ||
+        req.ip ||
+        req.connection.remoteAddress ||
+        req.socket.remoteAddress ||
+        req.connection.socket.remoteAddress || '';
     const currentTime = new Date();
 
     // 存储请求信息至数据库
