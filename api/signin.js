@@ -101,8 +101,8 @@ module.exports = (req, res) => {
                 // 密码登录
 
                 // 验证密码长度
-                if (infoJSON.password.length !== 32) {
-                    newResponse(res, 400, "密码位数不正确，需要32位");
+                if (infoJSON.password.length < 6) {
+                    newResponse(res, 400, "密码位数不正确，最少6位");
                     return
                 }
 
