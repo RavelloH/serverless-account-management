@@ -39,6 +39,7 @@ async function rateLimitControl(request) {
         },
     });
 
+    await prisma.$disconnect();
     return count <= 20;
 }
 
