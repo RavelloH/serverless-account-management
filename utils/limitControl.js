@@ -3,10 +3,10 @@ const updateLimitControl = require("./updateLimitControl")
 
 const limitControl = {
     check: function(req) {
-        checkLimitControl(req)
+        return checkLimitControl(req)
     },
     update: function(req) {
-        updateLimitControl(req)
+        return updateLimitControl(req)
     }
 }
 
