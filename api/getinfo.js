@@ -2,7 +2,7 @@ const prisma = require("../utils/prisma");
 const newResponse = require("../utils/response");
 const timeMonitor = require("../utils/time");
 const pack = require("../utils/pack");
-const rateLimitControl = require("../utils/rateLimitControl")
+const limitControl = require("../utils/limitControl")
 
 console.log("[Request]", "Get info");
 
