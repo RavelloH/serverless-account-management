@@ -1,6 +1,4 @@
-const {
-    PrismaClient
-} = require("@prisma/client");
+const prisma = require("../utils/prisma");
 const argon2 = require("argon2");
 const newResponse = require("../utils/response");
 const shuffler = require("../utils/shuffler");
@@ -10,7 +8,6 @@ const token = require("../utils/token");
 const rateLimitControl = require("../utils/rateLimitControl")
 
 console.log("[Request]", "Sign In");
-const prisma = new PrismaClient();
 
 let startTime;
 let isPasswordOK

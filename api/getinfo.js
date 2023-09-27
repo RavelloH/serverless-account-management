@@ -1,13 +1,10 @@
-const {
-    PrismaClient
-} = require("@prisma/client");
+const prisma = require("../utils/prisma");
 const newResponse = require("../utils/response");
 const timeMonitor = require("../utils/time");
 const pack = require("../utils/pack");
 const rateLimitControl = require("../utils/rateLimitControl")
 
 console.log("[Request]", "Get info");
-const prisma = new PrismaClient();
 
 let startTime;
 

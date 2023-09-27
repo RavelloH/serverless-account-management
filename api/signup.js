@@ -1,6 +1,4 @@
-const {
-    PrismaClient
-} = require("@prisma/client");
+const prisma = require("../utils/prisma");
 const argon2 = require("argon2");
 const newResponse = require("../utils/response");
 const shuffler = require("../utils/shuffler");
@@ -8,7 +6,6 @@ const timeMonitor = require("../utils/time");
 const rateLimitControl = require("../utils/rateLimitControl")
 
 console.log("[Request]", "Sign Up");
-const prisma = new PrismaClient();
 
 let startTime;
 let infoJSON
