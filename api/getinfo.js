@@ -15,7 +15,7 @@ module.exports = (req, res) => {
     } = req.query;
 
     if (uid) {
-        rateLimitControl(req).then((result) => {
+        limitControl.check(req).then((result) => {
             if (result) {
                 prisma.user.findUnique({
                     where: {
@@ -33,4 +33,6 @@ module.exports = (req, res) => {
     } else {
         newResponse(res, 400, "请提供uid")
     }
+    
+    limitControl.update(req)
 };

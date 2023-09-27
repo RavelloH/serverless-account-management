@@ -3,7 +3,7 @@ const argon2 = require("argon2");
 const newResponse = require("../utils/response");
 const shuffler = require("../utils/shuffler");
 const timeMonitor = require("../utils/time");
-const rateLimitControl = require("../utils/rateLimitControl")
+const limitControl = require("../utils/limitControl")
 
 console.log("[Request]", "Sign Up");
 
@@ -102,7 +102,7 @@ module.exports = (req, res) => {
         return
     }
 
-    rateLimitControl(req).then((rate) => {
+    limitControl.check(req).then((rate) => {
         if (rate) {
             // 检查唯一性
             prisma.user.findMany({
@@ -146,4 +146,5 @@ module.exports = (req, res) => {
             newResponse(res, 429, "已触发速率限制")
         }
     })
+    limitControl.update(req)
 };

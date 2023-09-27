@@ -5,7 +5,7 @@ const shuffler = require("../utils/shuffler");
 const timeMonitor = require("../utils/time");
 const pack = require("../utils/pack");
 const token = require("../utils/token");
-const rateLimitControl = require("../utils/rateLimitControl")
+const limitControl = require("../utils/limitControl")
 
 console.log("[Request]", "Sign In");
 
@@ -49,7 +49,7 @@ module.exports = (req, res) => {
 
     console.log("[InfoJSON]", timeMonitor(startTime), infoJSON);
 
-    rateLimitControl(req).then((rate) => {
+    limitControl.check(req).then((rate) => {
         if (rate) {
             // 登录模式分发
             if (typeof infoJSON.token !== 'undefined') {
@@ -146,4 +146,5 @@ module.exports = (req, res) => {
             newResponse(res, 429, "已触发速率限制")
         }
     })
+    limitControl.update(req)
 };
