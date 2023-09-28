@@ -13,6 +13,8 @@ function pack(userinfo,timestamp) {
         createAt: userinfo.createAt,
         lastUseAt: timestamp+'',
         gender: userinfo.gender,
+        avatar: userinfo.avatar,
+        website: userinfo.website
     }
 }
 
