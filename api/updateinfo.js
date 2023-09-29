@@ -18,8 +18,10 @@ const editableProperty = [
 
 function filterObject(properties, object) {
     const filteredObject = {};
+    console.log(properties,object)
     if (typeof object === 'object' && object !== null) {
         for (const property in object) {
+            console.log(properties,object,property)
             if (object.hasOwnProperty(property) && properties.includes(property)) {
                 filteredObject[property] = object[property];
             }
