@@ -46,7 +46,7 @@ module.exports = (req, res) => {
 
     infoJSON = info
 
-    if (typeof req.headers.authorization !== 'undefined') {
+    if (typeof req.headers.authorization == 'undefined') {
         newResponse(400, '请提供验证信息')
     }
 
