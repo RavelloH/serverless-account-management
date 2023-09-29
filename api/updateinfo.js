@@ -20,7 +20,6 @@ function filterObject(properties, objects) {
     const filteredObject = {};
     if (typeof objects === 'object' && objects !== null) {
         for (let property in objects) {
-            console.log(typeof objects)
             if (objects.hasOwnProperty(property) && properties.includes(property)) {
                 filteredObject[property] = objects[property];
             }
@@ -71,15 +70,13 @@ module.exports = (req, res) => {
             // 更新信息
             if (tokenInfo) {
                 console.log('TokenInfo:', tokenInfo)
-                console.log(info)
-                console.log(filterObject(editableProperty,info))
                 
                 // 请求新信息
                 prisma.user.update({
                     where: {
                         uid: tokenInfo.uid
                     },
-                    data: filterObject(editableProperty,info)
+                    data: filterObject(editableProperty,JSON.parse(JSON.stringify(info)))
                 }).then((result) => {
 
                     updateTime(result.uid, startTime)
