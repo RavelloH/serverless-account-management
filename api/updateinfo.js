@@ -21,7 +21,7 @@ function filterObject(properties, objects) {
     console.log(properties,object)
     if (typeof objects === 'object' && objects !== null) {
         for (let property in objects) {
-            console.log(properties,object,property)
+            console.log(properties,objects,property)
             if (objects.hasOwnProperty(property) && properties.includes(property)) {
                 filteredObject[property] = objects[property];
             }
