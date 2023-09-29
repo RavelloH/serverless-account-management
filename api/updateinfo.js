@@ -70,13 +70,14 @@ module.exports = (req, res) => {
             // 更新信息
             if (tokenInfo) {
                 console.log('TokenInfo:', tokenInfo)
-                
+
+                let filteredObject = filterObject(editableProperty,JSON.parse(JSON.stringify(info)))
                 // 请求新信息
                 prisma.user.update({
                     where: {
                         uid: tokenInfo.uid
                     },
-                    data: filterObject(editableProperty,JSON.parse(JSON.stringify(info)))
+                    data: filteredObject
                 }).then((result) => {
                     newResponse(res, 200, "修改成功", {
                         update: filteredObject
