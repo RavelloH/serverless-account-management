@@ -78,8 +78,6 @@ module.exports = (req, res) => {
                     },
                     data: filterObject(editableProperty,JSON.parse(JSON.stringify(info)))
                 }).then((result) => {
-
-                    updateTime(result.uid, startTime)
                     newResponse(res, 200, "修改成功", {
                         update: filteredObject
                     });
