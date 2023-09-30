@@ -16,8 +16,8 @@ model User {
   bio           String?      @db.VarChar(255)
   birth         DateTime?    @db.Date
   country       String?      @db.VarChar(10)
-  website       String?      @db.VarChar(20)
-  avatar        String?      @db.VarChar(30)
+  website       String?      @db.VarChar(60)
+  avatar        String?      @db.VarChar(100)
   role          Role         @default(USER)
   updatedAt     DateTime     @updatedAt
   createAt      DateTime     @default(now())
