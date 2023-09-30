@@ -40,6 +40,7 @@ module.exports = (req, res) => {
 
     if (typeof req.headers.authorization == 'undefined') {
         newResponse(400, '请提供验证信息');
+        return
     }
 
     limitControl.check(req).then((rate) => {
