@@ -82,8 +82,11 @@ module.exports = (req, res) => {
                     newResponse(res, 200, "修改成功", {
                         update: filteredObject
                     });
-
-
+                }).catch((e) => {
+                    newResponse(res,400,'修改失败：一项或多项属性值不合法',
+                    {
+                        error: e
+                    })
                 })
                 return
             }
