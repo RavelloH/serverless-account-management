@@ -118,7 +118,7 @@ module.exports = (req, res) => {
                         },
                     })
                     .then((result) => {
-                        if (result.length == 0) {
+                        if (result == null) {
                             newResponse(res, 400, '未找到此账号，请先注册');
                         } else {
                             console.log(result);
