@@ -9,6 +9,7 @@ const limitControl = require('../utils/limitControl');
 console.log('[Request]', 'Update Password');
 
 function encrypt(password) {
+    console.log(password)
     const pwd = shuffler(password);
     console.log('[Shuffler Done]', timeMonitor(startTime));
     const options = {
