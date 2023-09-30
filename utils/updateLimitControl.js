@@ -1,14 +1,16 @@
-const prisma = require("./prisma");
+const prisma = require('./prisma');
 
 async function updateLimitControl(request) {
-    const ip = request.headers['x-real-ip'] ||
-    request.headers['x-forwarded-for'] ||
-    request.ip ||
-    request.connection.remoteAddress ||
-    request.socket.remoteAddress ||
-    request.connection.socket.remoteAddress || '';
+    const ip =
+        request.headers['x-real-ip'] ||
+        request.headers['x-forwarded-for'] ||
+        request.ip ||
+        request.connection.remoteAddress ||
+        request.socket.remoteAddress ||
+        request.connection.socket.remoteAddress ||
+        '';
     const currentTime = new Date();
-    
+
     // 存储请求信息至数据库
     await prisma.requestLog.create({
         data: {
@@ -27,7 +29,6 @@ async function updateLimitControl(request) {
             },
         },
     });
-
 }
 
 module.exports = updateLimitControl;

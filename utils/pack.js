@@ -1,4 +1,4 @@
-function pack(userinfo,timestamp) {
+function pack(userinfo, timestamp) {
     return {
         uid: userinfo.uid,
         username: userinfo.username,
@@ -11,11 +11,11 @@ function pack(userinfo,timestamp) {
         role: userinfo.role,
         updatedAt: userinfo.updatedAt,
         createAt: userinfo.createAt,
-        lastUseAt: timestamp+'',
+        lastUseAt: timestamp + '',
         gender: userinfo.gender,
         avatar: userinfo.avatar,
-        website: userinfo.website
-    }
+        website: userinfo.website,
+    };
 }
 
 module.exports = pack;

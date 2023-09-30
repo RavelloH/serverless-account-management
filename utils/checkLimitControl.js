@@ -1,12 +1,14 @@
-const prisma = require("./prisma");
+const prisma = require('./prisma');
 
 async function checkLimitControl(request) {
-    const ip = request.headers['x-real-ip'] ||
-    request.headers['x-forwarded-for'] ||
-    request.ip ||
-    request.connection.remoteAddress ||
-    request.socket.remoteAddress ||
-    request.connection.socket.remoteAddress || '';
+    const ip =
+        request.headers['x-real-ip'] ||
+        request.headers['x-forwarded-for'] ||
+        request.ip ||
+        request.connection.remoteAddress ||
+        request.socket.remoteAddress ||
+        request.connection.socket.remoteAddress ||
+        '';
     const currentTime = new Date();
 
     // 检查ip是否超过每分钟20次的限制
