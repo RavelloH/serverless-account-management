@@ -90,9 +90,14 @@ module.exports = (req, res) => {
                                         password: encryptPassword
                                     }
                                 })
+                            }).then((returnValue)=>{
+                                newResponse(res, 200, '修改成功',);
+                            }).catch((e)=>{
+                                newResponse(res, 400, '写入时产生错误',{
+                                    error: e
+                                });
                             })
 
-                            newResponse(res, 200, '修改成功',);
                         } else {
                             newResponse(res, 400, '密码错误');
                         }
