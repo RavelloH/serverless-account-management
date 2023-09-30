@@ -44,7 +44,7 @@ module.exports = (req, res) => {
         !info.password ||
         !info.newPassword
     ) {
-        newResponse(400, '请提供账号/密码/新密码');
+        newResponse(res,400, '请提供账号/密码/新密码');
         return
     }
 
@@ -70,7 +70,7 @@ module.exports = (req, res) => {
                 },
             })
             .then((result) => {
-                if (result.length == 0) {
+                if (result == null) {
                     newResponse(res, 400, '未找到此账号，请先注册');
                 } else {
                     console.log(result);
