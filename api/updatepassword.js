@@ -42,14 +42,14 @@ module.exports = (req, res) => {
 
     if (!info.account ||
         !info.password ||
-        !info.newPassword
+        !info.newpassword
     ) {
         newResponse(res,400, '请提供账号/密码/新密码');
         return
     }
 
     // 长度验证
-    if (info.password.length < 6 || info.newPassword.length < 6) {
+    if (info.password.length < 6 || info.newpassword.length < 6) {
         newResponse(res, 400, '密码位数不正确，最少6位');
         return;
     }
@@ -80,7 +80,7 @@ module.exports = (req, res) => {
                         isPasswordOK = passwordValidate;
                         if (isPasswordOK) {
                             // 修改密码
-                            encrypt(info.newPassword).then((encryptPassword)=> {
+                            encrypt(info.newpassword).then((encryptPassword)=> {
                                 prisma.user
                                 .update({
                                     where: {
