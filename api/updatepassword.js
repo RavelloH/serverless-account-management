@@ -45,7 +45,7 @@ module.exports = (req, res) => {
         !info.password ||
         !info.newpassword
     ) {
-        newResponse(res,400, '请提供账号/密码/新密码');
+        newResponse(res, 400, '请提供账号/密码/新密码');
         return
     }
 
@@ -82,6 +82,7 @@ module.exports = (req, res) => {
                         if (isPasswordOK) {
                             // 修改密码
                             encrypt(info.newpassword).then((encryptPassword)=> {
+                                console.log(encryptPassword)
                                 prisma.user
                                 .update({
                                     where: {
@@ -90,13 +91,13 @@ module.exports = (req, res) => {
                                     data: {
                                         password: encryptPassword
                                     }
+                                }).then((returnValue)=> {
+                                    newResponse(res, 200, '修改成功',);
+                                }).catch((e)=> {
+                                    newResponse(res, 400, '写入时产生错误', {
+                                        error: e
+                                    });
                                 })
-                            }).then((returnValue)=>{
-                                newResponse(res, 200, '修改成功',);
-                            }).catch((e)=>{
-                                newResponse(res, 400, '写入时产生错误',{
-                                    error: e
-                                });
                             })
 
                         } else {
