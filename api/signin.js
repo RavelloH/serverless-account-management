@@ -83,7 +83,7 @@ module.exports = (req, res) => {
                                 updateTime(result.uid, startTime);
                                 newResponse(res, 200, '登录成功', {
                                     info: pack(result, startTime),
-                                    token: token.sign(pack(result, startTime)),
+                                    token: token.sign(pack(result, startTime),infoJSON.expiredTime || '7d'),
                                 });
                             } else {
                                 newResponse(res, 420, 'Token不处于激活状态');
@@ -137,7 +137,7 @@ module.exports = (req, res) => {
                                         updateTime(result.uid, startTime);
                                         newResponse(res, 200, '登录成功', {
                                             info: pack(result, startTime),
-                                            token: token.sign(pack(result, startTime)),
+                                            token: token.sign(pack(result, startTime), infoJSON.expiredTime || '7d'),
                                         });
                                     } else {
                                         newResponse(res, 400, '密码错误');
