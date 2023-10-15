@@ -89,6 +89,11 @@ module.exports = (req, res) => {
         newResponse(res, 400, '用户名中包含非法字符');
         return;
     }
+    
+    if (infoJSON.username.length > 10 || infoJSON.username.length < 5) {
+        newResponse(res, 400, '用户名长度应在5-10位之间')
+        return
+    }
 
     limitControl.check(req).then((rate) => {
         if (rate) {
