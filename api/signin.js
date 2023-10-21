@@ -59,6 +59,7 @@ module.exports = (req, res) => {
                     tokenInfo = token.verify(infoJSON.token);
                 } catch (err) {
                     console.log(err);
+                    let tokenInfo
                     if (err.name == 'TokenExpiredError') {
                         newResponse(res, 410, 'TOKEN已过期，请重新登录');
                     } else {

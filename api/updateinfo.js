@@ -44,6 +44,7 @@ module.exports = (req, res) => {
     }
 
     limitControl.check(req).then((rate) => {
+        let tokenInfo
         if (rate) {
             // 检查传入的token
             const tokenString = req.headers.authorization.split(' ')[1];
