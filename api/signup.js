@@ -115,7 +115,7 @@ module.exports = (req, res) => {
                     console.log('[uniqueCheck]', timeMonitor(startTime));
                     console.log(result);
 
-                    if (result !== null) {
+                    if (result.length !== 0) {
                         newResponse(res, 400, '用户名/邮箱已被占用');
                     } else {
                         // 注册流程
